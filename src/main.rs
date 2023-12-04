@@ -1,7 +1,65 @@
 use std::io;
 
 fn main(){
-    let _ = d1_b();
+    let _ = d3_a();
+}
+
+fn d3_a() -> io::Result<()>{
+    for line in std::io::stdin().lines(){
+        let mut zwi = line.unwrap();
+        while zwi.remove(0) != ':' {}
+        let parts = zwi.split('|').collect::<Vec<&str>>();
+        let front = parts[1].split(' ').collect::<Vec<&str>>();
+        let back = parts[2].split(' ').collect::<Vec<&str>>();
+
+    }
+    Ok(())
+}
+
+fn d2() -> io::Result<()>{
+    let mut i = 0u32;
+    let mut count = 0u32;
+    let mut cnt2 = 0u32;
+    for line in std::io::stdin().lines(){
+        let mut zwi = line.unwrap();
+        while zwi.remove(0) != ':' {}
+        i += 1;
+        let mut found = false;
+        let mut min_b = 0u32;
+        let mut min_g = 0u32;
+        let mut min_r = 0u32;
+        for split in zwi.split(';') {
+            for v in split.split(','){
+                //print!("{}", v);
+                let parts = v.split(' ').collect::<Vec<&str>>();
+                //print!("{}\n", parts[0]);
+                let num: u32 = parts[1].parse().unwrap();
+                match parts[2]{
+                    "red" => {
+                        if num > 12 { found = true }
+                        if num > min_r { min_r = num}
+                    }
+                    "green" =>{
+                        if num > 13 { found = true }
+                        if num > min_g {min_g = num }
+                    }
+                    "blue" =>{
+                        if num >14 { found = true }
+                        if num > min_b {min_b = num }
+                    }
+                    _ => {}
+                }
+                //print!("{}", found);
+            }
+        }
+        if ! found { count += i}
+        print!("{} {} {}\n", min_r, min_g, min_b);
+        cnt2 += min_r * min_g * min_b;
+    }
+    let mut n = 0u32;
+    for e in 1..100 { n += e}
+    print!("PartA: {}\nPartB: {}", count, cnt2);
+    Ok(())
 }
 
 fn d1_b() -> io::Result<()>{
