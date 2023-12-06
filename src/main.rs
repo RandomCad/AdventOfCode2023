@@ -5,14 +5,31 @@ fn main(){
 }
 
 fn d3_a() -> io::Result<()>{
+    let mut total = 0u64;
     for line in std::io::stdin().lines(){
         let mut zwi = line.unwrap();
         while zwi.remove(0) != ':' {}
         let parts = zwi.split('|').collect::<Vec<&str>>();
-        let front = parts[1].split(' ').collect::<Vec<&str>>();
-        let back = parts[2].split(' ').collect::<Vec<&str>>();
-
+        let front = parts[0].split(' ').collect::<Vec<&str>>();
+        let back = parts[1].split(' ').collect::<Vec<&str>>();
+        //parse the back:
+        let mut cor_num = Vec::<u32>::new();
+        for p in back{
+            let zwi = p.parse();
+            if let Ok(v) = zwi { cor_num.push(v) }
+        }
+        let mut num = 0x01u16;
+        for i in front{
+            let zwi = i.parse::<u32>();
+            if let Ok(v) = zwi {
+                if cor_num.contains(&v) {
+                    num <<= 1;
+                }
+            }
+        }
+        total += (num >> 1) as u64;
     }
+    print!("{}", total);
     Ok(())
 }
 
