@@ -1,7 +1,88 @@
 use std::io;
 
 fn main(){
-    let _ = d3_a();
+    let _ = d9_a();
+}
+
+fn d9_a() -> io::Result<()>{
+    let mut total_a = 0i64;
+    let mut total_b = 0i64;
+    for line in std::io::stdin().lines(){
+        let zwi = line.unwrap();
+        let parts = zwi.split(' ').collect::<Vec<&str>>();
+        let mut numbers =Vec::<Vec::<i32>>::new(); 
+        numbers.push(Vec::<i32>::new());
+        for i in parts{
+            numbers[0].push(i.parse().unwrap());
+        }
+        let mut cnt = 0usize;
+        while (!numbers[cnt].iter().all(|&x| x== 0)) && numbers[cnt].len() > 1{
+            numbers.push(Vec::<i32>::new());
+            let zwi: Vec::<i32> = numbers[cnt].clone();
+            for i in 0..numbers[cnt].len() -1{
+                numbers[cnt + 1].push(zwi[i + 1] - zwi[i]);
+            }
+            cnt += 1;
+        }
+        
+        let mut cnt = (numbers.len() - 2) as i32;
+        while cnt >= 0{
+            let i = cnt as usize;
+            let num = numbers[i][numbers[i].len()-1] + numbers[i + 1][numbers[i + 1].len() - 1];
+            print!("{}", num);
+            numbers[i].push(num);
+            cnt -= 1;
+        }
+        print!("{:?}\n\n",numbers);
+        total_a += numbers[0][numbers[0].len() - 1] as i64;
+        let mut num = 0i32;
+        cnt = (numbers.len() - 2) as i32;
+        while cnt >= 0{
+            let i = cnt as usize;
+            num = numbers[i][0]-num;
+            cnt -= 1;
+        }
+        total_b += num as i64;
+    }
+    print!("\ntotal A: {}\ntotal B: {}", total_a, total_b);
+    Ok(())
+}
+
+fn d3_b() -> io::Result<()>{
+    const card_num : usize = 220usize;
+    let mut card_amount: [u64;card_num] = [1;card_num];
+    let mut _cnt = 0usize;
+    for line in std::io::stdin().lines(){
+        let mut zwi = line.unwrap();
+        while zwi.remove(0) != ':' {}
+        let parts = zwi.split('|').collect::<Vec<&str>>();
+        let front = parts[0].split(' ').collect::<Vec<&str>>();
+        let back = parts[1].split(' ').collect::<Vec<&str>>();
+        //parse the back:
+        let mut cor_num = Vec::<u32>::new();
+        for p in back{
+            let zwi = p.parse();
+            if let Ok(v) = zwi { cor_num.push(v) }
+        }
+        let mut num = 0u16;
+        for i in front{
+            let zwi = i.parse::<u32>();
+            if let Ok(v) = zwi {
+                if cor_num.contains(&v) {
+                    num += 1;
+                }
+            }
+        }
+        for i in 1..num + 1{
+            card_amount[_cnt + (i as usize)] += card_amount[_cnt];
+        }
+
+        _cnt += 1;
+    }
+    let mut total = 0u128;
+    for i in 0..card_num { total += card_amount[i] as u128 }
+    print!("\n{}", total);
+    Ok(())
 }
 
 fn d3_a() -> io::Result<()>{
@@ -73,8 +154,8 @@ fn d2() -> io::Result<()>{
         print!("{} {} {}\n", min_r, min_g, min_b);
         cnt2 += min_r * min_g * min_b;
     }
-    let mut n = 0u32;
-    for e in 1..100 { n += e}
+    let mut _n = 0u32;
+    for e in 1..100 { _n += e}
     print!("PartA: {}\nPartB: {}", count, cnt2);
     Ok(())
 }
